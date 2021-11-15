@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 private const val TAG = "CrimeListFragment"
+private const val COMMON_CRIME = 0
+private const val SERIOUS_CRIME = 1
 
 class CrimeListFragment : Fragment() {
 
@@ -75,7 +77,11 @@ class CrimeListFragment : Fragment() {
         RecyclerView.Adapter<CrimeHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CrimeHolder {
-            val view = layoutInflater.inflate(R.layout.list_item_crime, parent, false)
+            val res = when(viewType) {
+                SERIOUS_CRIME -> R.layout.list_item_serious_crime
+                else -> R.layout.list_item_crime
+            }
+            val view = layoutInflater.inflate(res, parent, false)
             return CrimeHolder(view)
         }
 
@@ -85,6 +91,10 @@ class CrimeListFragment : Fragment() {
         }
 
         override fun getItemCount() = crimes.size
+
+        override fun getItemViewType(position: Int): Int {
+            return if (crimes[position].requiresPolice) SERIOUS_CRIME else COMMON_CRIME
+        }
     }
 
     companion object {
